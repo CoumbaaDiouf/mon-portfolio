@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* Identité visuelle : rose poudré, crème, bordeaux doux */
+@theme {
+  --color-cream: #fff9f5;
+  --color-powder: #f7e9ec;
+  --color-rose: #e8c4ce;
+  --color-bordeaux: #754457;
+  --color-bordeaux-dark: #5c3646;
+  --color-anthracite: #303238;
+
+  --font-display: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+  }
+
+  body {
+    @apply bg-cream font-sans text-anthracite antialiased;
+  }
+
+  ::selection {
+    background: var(--color-rose);
+    color: var(--color-anthracite);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-bordeaux);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* Apparition progressive des sections au défilement */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Préférence système : réduire les animations */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
