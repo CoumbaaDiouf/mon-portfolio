@@ -13,7 +13,7 @@ function App() {
     <div className="min-h-screen bg-cream">
       <a
         href="#accueil"
-        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-bordeaux focus:px-5 focus:py-2.5 focus:font-semibold focus:text-cream"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-60 focus:rounded-full focus:bg-bordeaux focus:px-5 focus:py-2.5 focus:font-semibold focus:text-cream"
       >
         Aller au contenu
       </a>
