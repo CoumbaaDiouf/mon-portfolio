@@ -12,6 +12,34 @@ dist
 dist-ssr
 *.local
 
+# Variables d'environnement : ne jamais committer de secrets
+.env
+.env.*
+!.env.example
+
+# Clés, certificats et identifiants
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.jks
+*.keystore
+.npmrc
+.netrc
+secrets.json
+credentials.json
+serviceAccountKey.json
+id_rsa*
+
+# Divers (système, build, tests)
+Thumbs.db
+Desktop.ini
+*.tsbuildinfo
+.vite
+coverage
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
