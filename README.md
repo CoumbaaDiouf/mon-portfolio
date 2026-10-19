@@ -19,14 +19,49 @@ rose poudré, crème et bordeaux doux.
 
 - Navigation par ancres avec défilement fluide et lien actif surligné
 - Menu mobile accessible (bouton hamburger, touche Échap, `aria-expanded`)
-- Bouton « Télécharger mon CV » (fichier PDF réel dans `public/cv/`)
-- Section projets pilotée par un fichier de données, avec emplacements prêts à remplir
-- Formulaire de contact avec validation côté client, messages d'erreur accessibles
-  (`role="alert"`, `aria-invalid`) et ouverture de la messagerie via `mailto:`
+- Bouton « Télécharger mon CV » (PDF réel `public/cv/CV_Coumba_Diouf.pdf`) : le fichier est
+  enregistré sous ce nom grâce à l'attribut `download`, au lieu d'être simplement affiché
+- Section projets pilotée par un fichier de données : cartes sobres et fenêtre de détails
+  accessible (Échap, clic sur l'arrière-plan, focus maîtrisé)
+- Section contact sans formulaire : bouton `mailto:`, liens LinkedIn et GitHub ouverts dans un
+  nouvel onglet (`rel="noopener noreferrer"`), aucune donnée collectée
 - Apparition discrète des sections au défilement, désactivée si le système
   indique « réduire les animations »
 - Responsive mobile / tablette / ordinateur, focus clavier visible, métadonnées SEO
   et de partage social (LinkedIn)
+- Captures des projets chargées à la demande (`loading="lazy"`)
+
+## Choix de design
+
+**Identité** — palette rose poudré (`powder`), crème (`cream`), bordeaux (`bordeaux`) et
+anthracite (`anthracite`), définie une seule fois en tokens Tailwind 4 dans `src/index.css`.
+Deux polices seulement : *Playfair Display* pour les titres (`font-display`) et *Inter*
+pour le texte courant (`font-sans`).
+
+**Composition** — la première section (`Hero.jsx`) associe un tagline en capitales, un grand
+titre Playfair, un paragraphe de présentation, deux boutons (projets / contact) et un portrait
+encadré surmonté d'une petite carte de repère. Sections, cartes et tuiles utilisent des coins
+arrondis (`rounded-3xl`, `rounded-2xl`), des filets roses et de légères ombres.
+
+**Rythme de fonds** — les sections alternent crème et rose très dilué pour guider l'œil :
+accueil (crème), À propos (rose 60 %), Compétences (crème), Projets (rose 60 %),
+Expérience (crème), Formation (rose 60 %), Contact (crème), pied de page (rose 60 %).
+
+**Interactions** — survols discrets : liens de navigation qui virent au bordeaux, boutons dont
+le fond s'assombrit, certaines cartes qui gagnent une ombre plus marquée, images de projet
+zoomées de 5 % au survol, apparition douce des sections au défilement. Aucune parallaxe,
+3D ou animation permanente.
+
+**Accessibilité** — contour de focus bordeaux de 2 px globalement (`:focus-visible`
+dans `index.css`), lien « Aller au contenu », fenêtre de projet piégée au clavier et refermée
+par Échap avec restitution du focus, `prefers-reduced-motion` respecté (animations supprimées).
+Tous les couples texte/fond ont été vérifiés : contraste **≥ 4,5:1** pour le texte courant
+(les valeurs d'opacité du rose et de l'anthracite ont été relevées à cette fin).
+
+**Vérifications effectuées** — pilotage de Chrome sans interface via le protocole DevTools :
+aucun débordement horizontal de 320 px à 1440 px, une seule balise `h1`, aucune ancre morte,
+toutes les images avec un texte alternatif, chargement différé des captures, apparition des
+25 blocs animés au défilement, fenêtre de projet et menu mobile testés au clavier.
 
 ## Installation
 
@@ -51,7 +86,7 @@ npm install
 
 ```
 public/
-  cv/cv-coumba-diouf.pdf      # CV à télécharger
+  cv/CV_Coumba_Diouf.pdf      # CV à télécharger
   photo-profil.jpeg           # Portrait
   favicon.svg
 src/
@@ -59,6 +94,7 @@ src/
     Navbar.jsx  Hero.jsx  About.jsx  Skills.jsx
     Projects.jsx  Experience.jsx  Education.jsx
     Contact.jsx  Footer.jsx
+    ProjectModal.jsx  CvDownloadButton.jsx
     Reveal.jsx  SectionHeading.jsx  icons.jsx
   data/
     profile.js      # Identité, e-mail, liens, photo, CV
@@ -74,14 +110,21 @@ src/
 Toutes les informations se modifient dans `src/data/` :
 
 1. **`profile.js`**
-   - `email` : votre adresse e-mail (sinon le formulaire reste en mode démonstration)
-   - `links.linkedin` et `links.github` : URL completes de vos profils
-   - `photoUrl` / `cvUrl` si vous renommez les fichiers
-2. **`projects.js`** : remplacez les 3 emplacements de démonstration par vos vrais projets
-   (mettez `placeholder: false`, ajoutez `codeUrl` et, si le projet est en ligne, `demoUrl`)
-3. **`experience.js`** : dates, lieu et détail réel de vos missions chez Neetali
-4. **`education.js`** : nom de votre établissement et années d'études
-5. **`skills.js`** : ne gardez que les compétences réellement acquises
+   - `email` : votre adresse e-mail (utilisée par le bouton `mailto:` de la section contact)
+   - `links.linkedin` et `links.github` : URL complètes de vos profils
+   - `photoUrl` / `cvUrl` / `cvFileName` si vous renommez les fichiers
+     (le PDF du CV doit rester dans `public/cv/`)
+2. **`projects.js`** : les 4 projets universitaires sont renseignés, avec leur capture dans
+   `public/images/`. Il reste à fournir :
+   - `codeUrl` : l'URL du dépôt GitHub. Renseignée pour « Application météo » et
+     « Connexion SSH avec WinSCP » ; à compléter pour CloudSim et SEN-Friperie
+   - `demoUrl` : uniquement si une démonstration en ligne est réellement accessible
+     (laissé vide pour l'instant — le site n'affiche alors aucun faux lien)
+3. **`experience.js`** : les dates, le lieu et les 5 missions du stage chez Neetali sont déjà
+   renseignés — ajustez la formulation ou ajoutez des missions si nécessaire
+4. **`education.js`** : le parcours est renseigné (baccalauréat, puis Licence 1 à 3 en
+   Informatique de gestion à l'ESCOA) — ajoutez les années universitaires si vous les connaissez
+5. **`skills.js`** : 4 catégories de compétences — retirez celles que vous n'avez pas acquises
 
 > Aucune information inventée n'a été ajoutée : les champs non renseignés apparaissent
 > sous forme de placeholders clairement identifiés.
@@ -132,7 +175,19 @@ Le fichier `.gitignore` exclut déjà `node_modules`, `dist` et les fichiers de 
 
 ## Notes
 
-- Le formulaire de contact n'utilise aucun service externe : il prépare un e-mail dans la
-  messagerie du visiteur via `mailto:`. Pour un envoi direct, il faudrait ajouter un
-  service tel que Formspree, Netlify Forms ou un backend propriétaire.
+- La section contact n'utilise aucun service externe ni backend : le bouton principal ouvre la
+  messagerie du visiteur via `mailto:`, et les liens LinkedIn / GitHub ouvrent le profil dans un
+  nouvel onglet. Pour un envoi direct depuis le site, il faudrait ajouter un service tel que
+  Formspree, Netlify Forms ou un backend propriétaire.
+- Le CV téléchargé provient du fichier `public/cv/CV_Coumba_Diouf.pdf`. Pour le remplacer,
+  écrasez ce fichier en conservant son nom, ou adaptez `cvUrl` et `cvFileName` dans `profile.js`.
+- L'accroche de la première section se règle dans `heroTitle` (première ligne, sous forme de
+  segments : chaque segment est un objet `{ texte }`, éventuellement marqué `nom: true` pour que le
+  nom soit souligné d'un filet tracé) et `heroHook` (seconde ligne, également en segments,
+  éventuellement marqués `accent: true` pour le bordeaux ou `italique: true`). Son paragraphe
+  d'introduction se règle dans `heroIntro`, et la ligne de tagline au-dessus du titre dans `tagline`
+  (tous dans `profile.js`).
+- Les animations sont entièrement en CSS (`src/index.css`) et respectent la préférence système
+  « réduire les animations ». Le module `src/lib/pointerFx.js` ajoute la parallaxe légère du hero et
+  le halo sous le pointeur des cartes projets : il ne s'active que sur les appareils à souris.
 - Le site est statique : aucun secret, jeton ou clé d'API n'est présent dans le dépôt.

@@ -1,36 +1,34 @@
 /**
- * Compétences classées par catégorie.
- * ➡️ Ne gardez que les compétences réellement acquises :
- *    supprimez simplement une ligne de la liste pour la retirer du site.
+ * Compétences classées par catégorie thématique.
+ * ➡️ Modifiez simplement les listes `skills` pour ajouter ou retirer un élément.
+ *    Aucun niveau de maîtrise ni pourcentage n'est affiché.
  */
 
 export const skillCategories = [
   {
     id: 'developpement',
-    title: 'Développement web',
-    skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Tailwind CSS', 'Git et GitHub'],
+    title: 'Développement et programmation',
+    skills: ['HTML', 'CSS', 'JavaScript','Tailwind CSS', 'React', 'Python', 'Java', 'Git', 'GitHub'],
   },
   {
-    id: 'uiux',
-    title: 'UI/UX Design',
-    // ➡️ Retirez « Recherche utilisateur » ou « Figma » si vous ne les pratiquez pas encore.
-    skills: [
-      'Wireframing',
-      'Prototypage',
-      "Conception d'interfaces",
-      "Organisation de l'information",
-      'Figma',
-      'Recherche utilisateur',
-    ],
+    id: 'bases-de-donnees',
+    title: 'Bases de données et SQL',
+    skills: ['SQL', 'MySQL', 'PostgreSQL'],
   },
   {
-    id: 'communication',
-    title: 'Communication digitale',
+    id: 'design',
+    title: 'UI/UX Design et conception graphique',
+    skills: ['Figma', 'Adobe Illustrator', 'Canva'],
+  },
+  {
+    id: 'communication-digitale',
+    title: 'Communication digitale et création de contenu',
     skills: [
       'Social Content Management',
       'Création de contenus digitaux',
-      'Organisation éditoriale',
-      'Communication sur les réseaux sociaux',
+      'Création de contenus audiovisuels',
+      'Planification éditoriale',
+      
     ],
   },
 ]

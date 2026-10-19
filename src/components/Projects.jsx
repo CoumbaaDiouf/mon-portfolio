@@ -1,10 +1,12 @@
-import { ExternalLink, FolderOpen } from 'lucide-react'
+import { useState } from 'react'
+import { FolderOpen } from 'lucide-react'
 import { projects } from '../data/projects'
 import { GithubIcon } from './icons'
+import ProjectModal from './ProjectModal'
 import Reveal from './Reveal'
 import SectionHeading from './SectionHeading'
 
-function ProjectCard({ project }) {
+function ProjectCard({ project, onOpen }) {
   // Emplacement de démonstration : affiché tant que le projet n'est pas renseigné
   if (project.placeholder) {
     return (
@@ -27,73 +29,78 @@ function ProjectCard({ project }) {
     )
   }
 
+  const technologiesAffichees = (project.technologies ?? []).slice(0, 5)
+  const technologiesRestantes = (project.technologies ?? []).slice(5)
+
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-rose/60 bg-white shadow-sm transition-shadow hover:shadow-md">
+    <article className="card-sheen card-ring card-spotlight group flex h-full flex-col overflow-hidden rounded-3xl border border-rose/60 bg-white shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:border-bordeaux/45 hover:shadow-lg">
       <div className="aspect-video overflow-hidden bg-powder">
         {project.image ? (
           <img
             src={project.image}
             alt={`Capture d’écran du projet ${project.title}`}
-            className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center">
-            <span className="font-display text-3xl font-bold text-bordeaux/40">{project.title.charAt(0)}</span>
+            <span className="font-display text-3xl font-bold text-bordeaux/40 transition-colors duration-500 group-hover:text-bordeaux/70">
+              {project.title.charAt(0)}
+            </span>
           </div>
         )}
       </div>
 
       <div className="flex flex-1 flex-col p-7">
-        <h3 className="font-display text-xl font-semibold text-anthracite">{project.title}</h3>
-        <p className="mt-1 text-sm font-medium text-bordeaux/80">{project.context}</p>
+        <h3 className="font-display text-xl font-semibold text-anthracite transition-colors duration-300 group-hover:text-bordeaux">
+          {project.title}
+        </h3>
 
-        <p className="mt-4 text-sm leading-6 text-anthracite/75">{project.description}</p>
+        <p className="mt-3 line-clamp-3 text-sm leading-6 text-anthracite/75">
+          {project.shortDescription ?? project.description}
+        </p>
 
-        {project.features?.length > 0 && (
-          <ul className="mt-4 space-y-1.5">
-            {project.features.map((feature) => (
-              <li key={feature} className="flex items-start gap-2 text-sm text-anthracite/70">
-                <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-rose" aria-hidden="true" />
-                {feature}
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="mt-auto pt-6">
+          {technologiesAffichees.length > 0 && (
+            <ul className="flex flex-wrap gap-2">
+              {technologiesAffichees.map((tech) => (
+                <li key={tech} className="badge-lift rounded-full bg-powder px-3 py-1 text-xs font-semibold text-bordeaux">
+                  {tech}
+                </li>
+              ))}
 
-        {project.stack?.length > 0 && (
-          <ul className="mt-5 flex flex-wrap gap-2">
-            {project.stack.map((tech) => (
-              <li key={tech} className="rounded-full bg-powder px-3 py-1 text-xs font-semibold text-bordeaux">
-                {tech}
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <div className="mt-6 flex flex-wrap gap-3 pt-1">
-          {project.codeUrl && (
-            <a
-              href={project.codeUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-bordeaux px-5 py-2.5 text-sm font-semibold text-cream transition-colors hover:bg-bordeaux-dark"
-            >
-              <GithubIcon size={15} />
-              Voir le code
-            </a>
+              {technologiesRestantes.length > 0 && (
+                <li
+                  title={technologiesRestantes.join(', ')}
+                  className="rounded-full border border-rose/70 px-3 py-1 text-xs font-semibold text-anthracite/75"
+                >
+                  +{technologiesRestantes.length}
+                </li>
+              )}
+            </ul>
           )}
 
-          {project.demoUrl && (
-            <a
-              href={project.demoUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-bordeaux/40 px-5 py-2.5 text-sm font-semibold text-bordeaux transition-colors hover:bg-powder"
+          <div className="mt-5 flex flex-wrap items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => onOpen(project)}
+              className="card-cta inline-flex items-center rounded-full bg-bordeaux px-2.5 py-2 text-xs font-semibold text-cream transition-all duration-300 ease-out hover:bg-bordeaux-dark hover:-translate-y-0.5 active:scale-[0.97]"
             >
-              <ExternalLink size={15} aria-hidden="true" />
-              Voir le projet
-            </a>
-          )}
+              Voir les détails
+            </button>
+
+            {project.codeUrl && (
+              <a
+                href={project.codeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-rose/70 px-2.5 py-2 text-xs font-semibold text-bordeaux transition-all duration-300 ease-out hover:border-bordeaux hover:bg-powder hover:-translate-y-0.5 active:scale-[0.97]"
+              >
+                <GithubIcon size={14} />
+                Voir le code
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </article>
@@ -101,8 +108,10 @@ function ProjectCard({ project }) {
 }
 
 function Projects() {
+  const [selectedProject, setSelectedProject] = useState(null)
+
   return (
-    <section id="projets" className="bg-powder/60 py-20 sm:py-24">
+    <section id="projets" className="section-ambient bg-powder/60 py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal>
           <SectionHeading
@@ -116,10 +125,12 @@ function Projects() {
         <div className="mt-14 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project, index) => (
             <Reveal key={project.id} delay={index * 100} className="h-full">
-              <ProjectCard project={project} />
+              <ProjectCard project={project} onOpen={setSelectedProject} />
             </Reveal>
           ))}
         </div>
+
+        <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
       </div>
     </section>
   )

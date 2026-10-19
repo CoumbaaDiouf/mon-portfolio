@@ -11,7 +11,7 @@ const highlights = [
 
 function About() {
   return (
-    <section id="apropos" className="bg-powder/60 py-20 sm:py-24">
+    <section id="apropos" className="section-ambient bg-powder/60 py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <Reveal>
           <SectionHeading eyebrow="À propos" title="Un parcours à la croisée de l’informatique et du design" />
@@ -31,8 +31,8 @@ function About() {
           <Reveal delay={120}>
             <ul className="space-y-4">
               {highlights.map(({ icon: Icon, label, value }) => (
-                <li key={label} className="flex items-start gap-4 rounded-2xl border border-rose/60 bg-white/70 p-5">
-                  <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-powder text-bordeaux">
+                <li key={label} className="card-sheen card-ring group flex items-start gap-4 rounded-2xl border border-rose/60 bg-white/70 p-5 transition-all duration-300 ease-out hover:-translate-y-1 hover:border-bordeaux/45 hover:shadow-md">
+                  <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-powder text-bordeaux transition-transform duration-300 ease-out group-hover:scale-110">
                     <Icon size={18} aria-hidden="true" />
                   </span>
                   <span>
